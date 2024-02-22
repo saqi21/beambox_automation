@@ -1,37 +1,47 @@
 package ui_beambox_automation;
 
+
+import java.util.Scanner;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class BeamboxMain {
 
 	public static void main(String[] args) {
 
-        String browserName = "chrome";
         WebDriver driver;
         LoginTestCases login;
+        SingupTestCases singup;
+        ImportDataBase  importDataBase;
 
-        if (browserName.equals("chrome")) { // corrected spelling of "chrome"
-            WebDriverManager.chromedriver().setup(); // setting up ChromeDriver
-            driver = new ChromeDriver(); // initializing ChromeDriver
+        Scanner beamBoxMenuInput = new Scanner(System.in);
+
+        System.out.println("**************** BeamBox Menu ****************");
+        System.out.println("For Which Module you want to Run Automate Test Cases");
+        System.out.println("1. Login, 2. Singup, 3. Import Guests DataBase ");
+        int beamboxMenu = beamBoxMenuInput.nextInt();
+
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+
+        if(beamboxMenu == 1) {
             login = new LoginTestCases(driver);
             login.loginPostiveTesting();
         } 
-        
-//        else if (browserName.equals("firefox")) {
-//            WebDriverManager.firefoxdriver().setup(); // setting up FirefoxDriver
-//            driver = new FirefoxDriver(); // initializing FirefoxDriver
-//            login = new LoginTestCases(driver);
-//            login.loginPostiveTesting();
-//        } 
-        
-        else {
-            System.out.print("No Browser Or WebDriver Selected. Please Select."); // corrected spelling and added period at the end
+
+        else if(beamboxMenu == 2){
+            singup = new SingupTestCases(driver);
+            singup.singupPostiveTesting();
         }
 
-        // Code to proceed with WebDriver execution
-    }
+        else if (beamboxMenu == 3) {
+        	login = new LoginTestCases(driver);
+        	login.loginPostiveTesting();
+        	importDataBase = new ImportDataBase(driver);
+        	importDataBase.importGuestDatabase();
+        }
 
+        driver.quit();
+    }
 }
