@@ -14,12 +14,13 @@ public class BeamboxMain {
         LoginTestCases login;
         SingupTestCases singup;
         ImportDataBase  importDataBase;
+        AddGuest addGuest;
 
         Scanner beamBoxMenuInput = new Scanner(System.in);
 
         System.out.println("**************** BeamBox Menu ****************");
         System.out.println("For Which Module you want to Run Automate Test Cases");
-        System.out.println("1. Login, 2. Singup, 3. Import Guests DataBase ");
+        System.out.println("1. Login, 2. Singup, 3. Import Guests DataBase, 4. Add Guest ");
         int beamboxMenu = beamBoxMenuInput.nextInt();
 
         WebDriverManager.chromedriver().setup();
@@ -42,6 +43,13 @@ public class BeamboxMain {
         	importDataBase.importGuestDatabase();
         }
 
-        driver.quit();
+        else if (beamboxMenu == 4) {
+        	login = new LoginTestCases(driver);
+        	login.loginPostiveTesting();
+        	addGuest = new AddGuest(driver);
+        	addGuest.addGuest();
+        }
+
+        //driver.quit();
     }
 }
