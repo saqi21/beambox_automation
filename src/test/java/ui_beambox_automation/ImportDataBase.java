@@ -52,7 +52,7 @@ public class ImportDataBase {
                 String currentURL = driver.getCurrentUrl();
                 System.out.println(currentURL);
 
-                File uploadFile = new File("src/main/resources/guestDataBase/26-Guests-DataBase.csv");
+                File uploadFile = new File("src/main/resources/guestDataBase/1500-Guests-DataBase .csv");
                 Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(5));
                 WebElement fileInput = wait.until(ExpectedConditions.presenceOfElementLocated(By.name("import[file]")));
                 fileInput.sendKeys(uploadFile.getAbsolutePath());
