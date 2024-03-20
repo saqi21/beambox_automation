@@ -18,15 +18,23 @@ public class BeamboxMain {
         AddGuest addGuest;
         BlastTestCases blast;
         BenefitsPages benefitsPages;
+        CancellatioFlow cancellatioFlow;
+        int cancellatioFlowOption = 0;
 
         Scanner beamBoxMenuInput = new Scanner(System.in);
 
         System.out.println("**************** BeamBox Menu ****************");
         System.out.println("For Which Module you want to Run Automate Test Cases");
         System.out.println("1. Login, 2. Singup, 3. Import Guests DataBase, 4. Add Guest, 5. Blast ");
-        System.out.println("6. Smart Markting Page");
+        System.out.println("6. Smart Markting Page, 7. Cancellatio Flow ");
         int beamboxMenu = beamBoxMenuInput.nextInt();
         
+        if (beamboxMenu == 7) {
+        	System.out.println("**************** Cancellation Flow Menu ****************");
+        	System.out.println("1. Pause Subscription, 2. DowngradePlan");
+        	cancellatioFlowOption = beamBoxMenuInput.nextInt();
+        }
+
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
 
@@ -34,7 +42,7 @@ public class BeamboxMain {
             if(beamboxMenu == 1) {
                 login = new LoginTestCases(driver);
                 login.loginPostiveTesting();
-            } 
+            }
 
             else if(beamboxMenu == 2){
                 singup = new SingupTestCases(driver);
@@ -65,6 +73,13 @@ public class BeamboxMain {
             else if (beamboxMenu == 6) {
             	benefitsPages = new BenefitsPages(driver);
             	benefitsPages.smartMarkitingCampainPage();
+            }
+
+            else if (beamboxMenu == 7) {
+            	login = new LoginTestCases(driver);
+            	login.loginPostiveTesting();
+            	cancellatioFlow = new CancellatioFlow(driver);
+            	cancellatioFlow.cancellationFlowMain(cancellatioFlowOption);
             }
         } catch(WebDriverException e) {
         	System.out.println("Warning !");
