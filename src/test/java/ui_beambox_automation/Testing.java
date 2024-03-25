@@ -1,16 +1,12 @@
 package ui_beambox_automation;
 
-import java.util.Random;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class Testing {
+	public static void main(String[] args) throws Exception {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		Random random = new Random();
-		int randomNumber = random.nextInt(4) + 1;
-		System.out.println(randomNumber);
 	}
-
 }
