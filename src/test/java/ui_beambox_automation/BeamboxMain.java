@@ -20,13 +20,14 @@ public class BeamboxMain {
 		BenefitsPages benefitsPages;
 		CancellationFlow cancellationFlow;
 		int cancellatioFlowOption = 0;
+		Sitemap sitemap;
 
 		Scanner beamBoxMenuInput = new Scanner(System.in);
 
 		System.out.println("**************** BeamBox Menu ****************");
 		System.out.println("For Which Module you want to Run Automate Test Cases");
 		System.out.println("1. Login, 2. Singup, 3. Import Guests DataBase, 4. Add Guest, 5. Blast ");
-		System.out.println("6. Smart Markting Page, 7. Cancellatio Flow ");
+		System.out.println("6. Smart Markting Page, 7. Cancellatio Flow, 8. Sitemap ");
 		int beamboxMenu = beamBoxMenuInput.nextInt();
 
 		if (beamboxMenu == 7) {
@@ -80,6 +81,11 @@ public class BeamboxMain {
 				login.loginPostiveTesting();
 				cancellationFlow = new CancellationFlow(driver);
 				cancellationFlow.cancellationFlowMain(cancellatioFlowOption);
+			}
+
+			else if (beamboxMenu == 8) {
+				sitemap = new Sitemap(driver);
+				sitemap.sitemap();
 			}
 		} catch (WebDriverException e) {
 			System.out.println("Warning !");

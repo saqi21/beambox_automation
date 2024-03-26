@@ -3,11 +3,15 @@ package ui_beambox_automation;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URLConnection;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.net.URL;
@@ -31,7 +35,7 @@ public class Sitemap {
         this.driver = driver;
     }
 
-    public void sitemap() throws InterruptedException {
+    public void sitemap() {
 
     List<String> webSiteMapUrls = countUrlsInDiv();
     List<String> siteMapXMLUrls = readAndCountUrlsInSitemap();
@@ -57,13 +61,13 @@ public class Sitemap {
     driver.quit();
 }
 
-private List<String> countUrlsInDiv() throws InterruptedException {
+private List<String> countUrlsInDiv(){
     driver.get("http://lvh.me:3000/sitemap/");
     driver.navigate().refresh();
     driver.manage().window().maximize();
-    Thread.sleep(2000);
 
-    WebElement divElement = driver.findElement(By.xpath("/html/body/div[3]/div"));
+    Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    WebElement divElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[3]/div")));
     List<WebElement> urls = divElement.findElements(By.tagName("a"));
 
     List<String> urlStrings = new ArrayList<>();
@@ -89,9 +93,6 @@ private List<String> readAndCountUrlsInSitemap() {
             }
         }
         reader.close();
-        System.out.println("Actual Number of URLs in the Sitemap XML : " + sitemapUrls.size());
-
-        
 
     } catch (IOException e) {
         e.printStackTrace();
@@ -100,7 +101,7 @@ private List<String> readAndCountUrlsInSitemap() {
 }
 
 
-public static List<String> splitUrls(List<String> siteMapUrls, String BASE_URL) {
+private static List<String> splitUrls(List<String> siteMapUrls, String BASE_URL) {
     List<String> splitUrls = new ArrayList<>();
     for (String url : siteMapUrls) {
         if (url.startsWith(BASE_URL)) {
@@ -114,9 +115,9 @@ public static List<String> splitUrls(List<String> siteMapUrls, String BASE_URL) 
 }
 
 private List<String> compareTheUrls(List<String> arrayList1, List<String> arrayList2) {
-    arrayList1.removeAll(arrayList2);
-     return arrayList1;
-
+    List<String> result = new ArrayList<>(arrayList1);
+    result.removeAll(arrayList2);
+    return result;
 }
 
 private void printUrls(List<String> urls){
