@@ -19,7 +19,7 @@ public class CancellationFlow {
 	private static final String CONFIRM_PAUSE_SUBSCRIPTION_BUTTON_XPATH = "/html/body/div[6]/div/div[10]/button[1]";
 	private static final String CONFIRM_DOWNGRADE_PLAN_BUTTON_XPATH = "//*[@id='downgrade_subscription']/div[1]/div/div[2]/button";
 	private static final String DOWNGRADE_PLAN_BUTTON_XPATH = "//*[@id='downgrade_subscription']/div[2]/button";
-	private static final String CANCEL_SUBSCRIPTION_INSTEAD_LINK_XPATH = "//*[@id='pause_subscription']/div/div/a";
+	//private static final String CANCEL_SUBSCRIPTION_INSTEAD_LINK_XPATH = "//*[@id='pause_subscription']/div/div/a";
 	private static final String CANCEL_SUBSCRIPTION_INSTEAD_ON_PAUSE_PAGE_LINK_XPATH = "//*[@id='pause_subscription']/div/div/a";
 	private static final String CANCEL_SUBSCRIPTION_INSTEAD_ON_DOWNGRADE_PAGE_LINK_XPATH = "//*[@id=\"downgrade_subscription\"]/div[2]/a";
 	private static final String CANCEL_SUBSCRIPTION_INSTEAD_ON_DISCOUNT30_PAGE_LINK_XPATH = "//*[@id=\"subscription_discount\"]/div[1]/a";
@@ -56,7 +56,7 @@ public class CancellationFlow {
 			if (cancellationFlowOption == 2) {
 				Thread.sleep(5000);
 				WebElement cancelSubscriptionInstead = driver
-						.findElement(By.xpath(CANCEL_SUBSCRIPTION_INSTEAD_LINK_XPATH));
+						.findElement(By.xpath(CANCEL_SUBSCRIPTION_INSTEAD_ON_PAUSE_PAGE_LINK_XPATH));
 				cancelSubscriptionInstead.click();
 				Thread.sleep(5000);
 				try {
@@ -107,12 +107,15 @@ public class CancellationFlow {
 	}
 
 	public void pauseSubscription(int randomNumber) throws InterruptedException {
+		Thread.sleep(2000);
 		WebElement pauseSubscriptionButton = driver.findElement(By.xpath(PAUSE_SUBSCRIPTION_BUTTON_XPATH));
 
 		if (randomNumber == 2) {
+			Thread.sleep(2000);
 			WebElement twoMonthRadio = driver.findElement(By.id(TWO_MONTH_RADIO_ID));
 			twoMonthRadio.click();
 		} else if (randomNumber == 3) {
+			Thread.sleep(2000);
 			WebElement threeMonthRadio = driver.findElement(By.id(THREE_MONTH_RADIO_ID));
 			threeMonthRadio.click();
 		}
