@@ -48,7 +48,7 @@ public class AddGuest {
 				addGuest.click();
 
 				// find the modal first
-				WebElement addGuestsModalDialog = driver.findElement(By.xpath("//*[@id=\"new-human-modal\"]/div"));
+				//WebElement addGuestsModalDialog = driver.findElement(By.xpath("//*[@id=\"new-human-modal\"]/div"));
 
 				WebElement locationDropDown = driver.findElement(By.xpath("//*[@id=\"location_id\"]"));
 				Select locationDropDownOption = new Select(locationDropDown);

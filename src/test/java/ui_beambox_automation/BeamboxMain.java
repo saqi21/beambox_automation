@@ -93,7 +93,7 @@ public class BeamboxMain {
 			driver.quit();
 		}
 
-		// driver.quit();
+		driver.quit();
 
 	}
 }

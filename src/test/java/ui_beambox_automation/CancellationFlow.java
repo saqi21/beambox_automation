@@ -9,7 +9,7 @@ public class CancellationFlow {
 	private WebDriver driver;
 	private static final String NAV_LINK_XPATH = "//*[@id='navigation']/ul[1]/li[7]/a";
 	private static final String SETTING_LINK_XPATH = "//*[@id='navigation']/ul[1]/li[7]/ul/li[1]/a";
-	private static final String CANCEL_ACCOUNT_LINK_XPATH = "//*[@id='edit_user_6']/div[10]/div/a";
+	private static final String EXTEND_TRIAL_ACCEPT_OFFER_XPATH = "//*[@id=\"extend_trial\"]/div/div[3]/div/button";
 	private static final String PAUSE_SUBSCRIPTION_BUTTON_XPATH = "//*[@id='pause_subscription']/div/div/button";
 	private static final String TWO_MONTH_RADIO_ID = "twoMonth";
 	private static final String THREE_MONTH_RADIO_ID = "threeMonth";
@@ -19,10 +19,10 @@ public class CancellationFlow {
 	private static final String CONFIRM_PAUSE_SUBSCRIPTION_BUTTON_XPATH = "/html/body/div[6]/div/div[10]/button[1]";
 	private static final String CONFIRM_DOWNGRADE_PLAN_BUTTON_XPATH = "//*[@id='downgrade_subscription']/div[1]/div/div[2]/button";
 	private static final String DOWNGRADE_PLAN_BUTTON_XPATH = "//*[@id='downgrade_subscription']/div[2]/button";
-	//private static final String CANCEL_SUBSCRIPTION_INSTEAD_LINK_XPATH = "//*[@id='pause_subscription']/div/div/a";
 	private static final String CANCEL_SUBSCRIPTION_INSTEAD_ON_PAUSE_PAGE_LINK_XPATH = "//*[@id='pause_subscription']/div/div/a";
 	private static final String CANCEL_SUBSCRIPTION_INSTEAD_ON_DOWNGRADE_PAGE_LINK_XPATH = "//*[@id=\"downgrade_subscription\"]/div[2]/a";
 	private static final String CANCEL_SUBSCRIPTION_INSTEAD_ON_DISCOUNT30_PAGE_LINK_XPATH = "//*[@id=\"subscription_discount\"]/div[1]/a";
+	private static final String CANCEL_SUBSCRIPTION_INSTEAD_ON_EXTEND_TRIAL_PAGE_XPATH = "//*[@id=\"extend_trial\"]/div/div[3]/div/a";
 
 	public CancellationFlow(WebDriver driver) {
 		this.driver = driver;
@@ -40,70 +40,109 @@ public class CancellationFlow {
 		driver.findElement(By.xpath(SETTING_LINK_XPATH)).click();
 
 		Thread.sleep(2000);
-		driver.findElement(By.xpath(CANCEL_ACCOUNT_LINK_XPATH)).click();
+		WebElement cancelAccount = driver.findElement(By.xpath("//a[contains(@href, 'cancel_account=true')]"));
+		cancelAccount.click();
 
-		try {
-			if (cancellationFlowOption == 1) {
-				pauseSubscription(randomNumber);
-				Thread.sleep(6000);
+		WebElement cancelInsteadOnExtendTrial = driver
+				.findElement(By.xpath(CANCEL_SUBSCRIPTION_INSTEAD_ON_EXTEND_TRIAL_PAGE_XPATH));
+		WebElement cancelInsteadOnPausePage = driver
+				.findElement(By.xpath(CANCEL_SUBSCRIPTION_INSTEAD_ON_PAUSE_PAGE_LINK_XPATH));
+		WebElement cancelInsteadOnDowngradePage = driver
+				.findElement(By.xpath(CANCEL_SUBSCRIPTION_INSTEAD_ON_DOWNGRADE_PAGE_LINK_XPATH));
+		WebElement cancelInsteadOnDiscount30Page = driver
+				.findElement(By.xpath(CANCEL_SUBSCRIPTION_INSTEAD_ON_DISCOUNT30_PAGE_LINK_XPATH));
+
+		if (cancellationFlowOption == 0) {
+			try {
+				Thread.sleep(2000);
+				extenTrial();
+			} catch (Exception e) {
+				System.out.println("Some Thing went wrong please have a look" + e.getMessage());
+			}
+		}
+
+		else if (cancellationFlowOption == 1) {
+			try {
+				Thread.sleep(2000);
+				cancelInsteadOnExtendTrial.click();
+			} catch (Exception e) {
+				System.out.println("You Already Avail the Exteded Offer");
+			}
+
+			pauseSubscription(randomNumber);
+			Thread.sleep(2000);
+			driver.close();
+		}
+
+		else if (cancellationFlowOption == 2) {
+			try {
+				Thread.sleep(2000);
+				cancelInsteadOnExtendTrial.click();
+				Thread.sleep(2000);
+				cancelInsteadOnPausePage.click();
+			} catch (Exception e) {
+				System.out.println("You are on Pause Page ");
+			}
+
+			try {
+				Thread.sleep(2000);
+				downgradePlan("growth");
+				driver.close();
+			} catch (Exception e) {
+				System.out.println("Skiped the Downgrade Option");
 				driver.close();
 			}
-		} catch (Exception e) {
-			System.out.println("Something went wrong: " + e.getMessage());
+
 		}
 
-		try {
-			if (cancellationFlowOption == 2) {
-				Thread.sleep(5000);
-				WebElement cancelSubscriptionInstead = driver
-						.findElement(By.xpath(CANCEL_SUBSCRIPTION_INSTEAD_ON_PAUSE_PAGE_LINK_XPATH));
-				cancelSubscriptionInstead.click();
-				Thread.sleep(5000);
-				try {
-					downgradePlan("growth");
-					Thread.sleep(3000);
-					driver.close();
-				} catch (Exception e) {
-					System.out.println("Skiped the Downgrade Option");
-					driver.close();
-				}
-			}
-		} catch (Exception e) {
-			System.out.println("Something went wrong: " + e.getMessage());
-		}
+		else if (cancellationFlowOption == 3 || cancellationFlowOption == 4) {
+			try {
+				Thread.sleep(2000);
+				cancelInsteadOnExtendTrial.click();
+				cancelInsteadOnPausePage.click();
+				cancelInsteadOnDowngradePage.click();
 
-		try {
-			if (cancellationFlowOption == 3 || cancellationFlowOption == 4) {
-				Thread.sleep(5000);
-				WebElement cancelSubscriptionInsteadOnPasuePage = driver
-						.findElement(By.xpath(CANCEL_SUBSCRIPTION_INSTEAD_ON_PAUSE_PAGE_LINK_XPATH));
-				cancelSubscriptionInsteadOnPasuePage.click();
-
-				try {
-					Thread.sleep(3000);
-					WebElement cancelInsteadOnDowngrade = driver
-							.findElement(By.xpath(CANCEL_SUBSCRIPTION_INSTEAD_ON_DOWNGRADE_PAGE_LINK_XPATH));
-					cancelInsteadOnDowngrade.click();
-				} catch (Exception e) {
-					System.out.println("Skipped Downgrade Page");
-				}
 				if (cancellationFlowOption == 4) {
-					WebElement cancelSubscriptionInsteadOnDiscount30Page = driver
-							.findElement(By.xpath(CANCEL_SUBSCRIPTION_INSTEAD_ON_DISCOUNT30_PAGE_LINK_XPATH));
-					cancelSubscriptionInsteadOnDiscount30Page.click();
+					Thread.sleep(2000);
+					cancelInsteadOnDiscount30Page.click();
 				}
+			} catch (Exception e) {
+				System.out.println("You are on 30% Discount Page ");
 
-				try {
-					discount30Or50(randomNumber);
-				} catch (Exception e) {
-					System.out.println("You already availed the discount");
-					driver.close();
-				}
 			}
-		} catch (Exception e) {
-			System.out.println("Something went wrong: " + e.getMessage());
+
+			try {
+				discount30Or50(randomNumber);
+			} catch (Exception e) {
+				System.out.println("You already availed the discount");
+				driver.close();
+			}
 		}
 
+		else if (cancellationFlowOption == 5) {
+			try {
+				cancelInsteadOnExtendTrial.click();
+				cancelInsteadOnPausePage.click();
+				cancelInsteadOnDowngradePage.click();
+				cancelInsteadOnDiscount30Page.click();
+				cancelInsteadOnDiscount30Page.click();
+			} catch (Exception e) {
+				System.out.println("You are dirctly rederict to Return hardware");
+			}
+
+		}
+
+	}
+
+	private void extenTrial() {
+		try {
+			WebElement extendTrialAcceptOffer = driver.findElement(By.xpath(EXTEND_TRIAL_ACCEPT_OFFER_XPATH));
+			extendTrialAcceptOffer.click();
+			System.out.println("You Succeessfully Availed the Offer");
+		} catch (Exception e) {
+			System.out.println("You Already Availed the Offer");
+			driver.close();
+		}
 	}
 
 	public void pauseSubscription(int randomNumber) throws InterruptedException {
@@ -131,12 +170,6 @@ public class CancellationFlow {
 		try {
 			WebElement planRadio = driver.findElement(By.id(plan + "_plan"));
 			planRadio.click();
-		} catch (Exception e) {
-			System.out.println("You are already on " + plan + " Plan");
-			driver.close();
-		}
-
-		try {
 			Thread.sleep(2000);
 			WebElement downgradePlanButton = driver.findElement(By.xpath(DOWNGRADE_PLAN_BUTTON_XPATH));
 			downgradePlanButton.click();
@@ -144,7 +177,8 @@ public class CancellationFlow {
 			WebElement confirmDowngradePlanButton = driver.findElement(By.xpath(CONFIRM_DOWNGRADE_PLAN_BUTTON_XPATH));
 			confirmDowngradePlanButton.click();
 		} catch (Exception e) {
-			System.out.println("Your are not Downgrade the Plan");
+			System.out.println("You are already on " + plan + " Plan Or Skipped the Downgrade Plan Page");
+			driver.close();
 		}
 	}
 
