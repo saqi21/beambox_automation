@@ -13,7 +13,7 @@ public class BeamboxMain {
 
 		WebDriver driver;
 		LoginTestCases login;
-		SingupTestCases singup;
+		SignupTestCases signup;
 		ImportDataBase importDataBase;
 		AddGuest addGuest;
 		BlastTestCases blast;
@@ -42,31 +42,31 @@ public class BeamboxMain {
 		try {
 			if (beamboxMenu == 1) {
 				login = new LoginTestCases(driver);
-				login.loginPostiveTesting();
+				login.loginPositiveTesting();
 			}
 
 			else if (beamboxMenu == 2) {
-				singup = new SingupTestCases(driver);
-				singup.singupPostiveTesting();
+				signup = new SignupTestCases(driver);
+				signup.signupPositiveTesting();
 			}
 
 			else if (beamboxMenu == 3) {
 				login = new LoginTestCases(driver);
-				login.loginPostiveTesting();
+				login.loginPositiveTesting();
 				importDataBase = new ImportDataBase(driver);
 				importDataBase.importGuestDatabase();
 			}
 
 			else if (beamboxMenu == 4) {
 				login = new LoginTestCases(driver);
-				login.loginPostiveTesting();
+				login.loginPositiveTesting();
 				addGuest = new AddGuest(driver);
 				addGuest.addGuest();
 			}
 
 			else if (beamboxMenu == 5) {
 				login = new LoginTestCases(driver);
-				login.loginPostiveTesting();
+				login.loginPositiveTesting();
 				blast = new BlastTestCases(driver);
 				blast.navigateToBlast();
 			}
@@ -78,7 +78,7 @@ public class BeamboxMain {
 
 			else if (beamboxMenu == 7) {
 				login = new LoginTestCases(driver);
-				login.loginPostiveTesting();
+				login.loginPositiveTesting();
 				cancellationFlow = new CancellationFlow(driver);
 				cancellationFlow.cancellationFlowMain(cancellatioFlowOption);
 			}
