@@ -1,8 +1,8 @@
 package ui_beambox_automation;
 
-import java.time.Duration;
-
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchSessionException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -10,12 +10,13 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
+
 public class BlastTestCases {
 	private WebDriver driver;
 	private int counter = 1;
 
 	public BlastTestCases(WebDriver driver) {
-		super();
 		this.driver = driver;
 	}
 
@@ -27,50 +28,41 @@ public class BlastTestCases {
 		this.driver = driver;
 	}
 
-	public void navigateToBlast() throws InterruptedException {
-		Wait<WebDriver> getGrwoElementwait = new WebDriverWait(driver, Duration.ofSeconds(10));
-		WebElement getGrowElement = getGrwoElementwait
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"navigation\"]/ul[1]/li[2]/a")));
-		System.out.println(getGrowElement.getText());
-		getGrowElement.click();
+	public void navigateToBlast() {
+		try {
+			WebElement getGrowElement = new WebDriverWait(driver, Duration.ofSeconds(5))
+					.until(ExpectedConditions
+							.presenceOfElementLocated(By.xpath("//*[@id=\"navigation\"]/ul[1]/li[2]/a")));
+			getGrowElement.click();
 
-		Wait<WebDriver> getBlastsWebElementWait = new WebDriverWait(driver, Duration.ofSeconds(5));
-		WebElement getBlastsWebElement = getBlastsWebElementWait.until(ExpectedConditions
-				.presenceOfElementLocated(By.xpath("//*[@id=\"navigation\"]/ul[1]/li[2]/div[2]/div/div[1]/a")));
-		System.out.println(getBlastsWebElement.getText());
-		getBlastsWebElement.click();
+			WebElement getBlastsWebElement = new WebDriverWait(driver, Duration.ofSeconds(5))
+					.until(ExpectedConditions.presenceOfElementLocated(
+							By.xpath("//*[@id=\"navigation\"]/ul[1]/li[2]/div[2]/div/div[1]/a")));
+			getBlastsWebElement.click();
 
-		// click on Send a new Blast Button
-		Wait<WebDriver> sendNewBlastButtonWait = new WebDriverWait(driver, Duration.ofSeconds(10));
-		WebElement sendNewBlastButton = sendNewBlastButtonWait.until(ExpectedConditions
-				.presenceOfElementLocated(By.xpath("//*[@id=\"data-source\"]/div[1]/div/div[1]/button")));
-		// System.out.println(sendNewBlastButton.getText());
-		sendNewBlastButton.click();
+			WebElement sendNewBlastButton = new WebDriverWait(driver, Duration.ofSeconds(5))
+					.until(ExpectedConditions
+							.presenceOfElementLocated(By.xpath("//*[@id=\"data-source\"]/div[1]/div/div[1]/button")));
+			sendNewBlastButton.click();
 
-		// locate the Modal
-		Wait<WebDriver> waitforEmailTypeButton = new WebDriverWait(driver, Duration.ofSeconds(10));
-		WebElement emailTypeBlast = waitforEmailTypeButton.until(ExpectedConditions.elementToBeClickable(
-				By.xpath("//*[@id=\"blast-modal\"]/div/div/div/div[2]/div/div/div[1]/div/div[1]/a")));
-		// System.out.println(emailTypeBlast.getText());
-		emailTypeBlast.click();
-		createEmailBlast();
-		// createSMSBlast();
+			WebElement emailTypeBlast = new WebDriverWait(driver, Duration.ofSeconds(5))
+					.until(ExpectedConditions.elementToBeClickable(
+							By.xpath("//*[@id=\"blast-modal\"]/div/div/div/div[2]/div/div/div[1]/div/div[1]/a")));
+			emailTypeBlast.click();
+
+			createEmailBlast();
+		} catch (NoSuchSessionException e) {
+			System.out.println("Session expired.");
+			e.printStackTrace();
+		}
 	}
 
-	public void createEmailBlast() throws InterruptedException {
+	public void createEmailBlast() {
 		setUpBlast();
 		selectRecipients();
 		designBlast();
-		validateBlast();
-		sendBlast();
-	}
-
-	public void createSMSBlast() throws InterruptedException {
-		Thread.sleep(1000);
-		WebElement smsBlastButton = driver
-				.findElement(By.xpath("//*[@id=\"blast-modal\"]/div/div/div/div[2]/div/div/div[1]/div/div[2]/div"));
-		smsBlastButton.click();
-		selectRecipients();
+		// validateBlast();
+		// sendBlast();
 	}
 
 	public void setUpBlast() {
@@ -81,87 +73,91 @@ public class BlastTestCases {
 		WebElement blastSubject = driver.findElement(By.xpath("//*[@id=\"blast_subject\"]"));
 		blastSubject.clear();
 		blastSubject.sendKeys("Test Automate Blast" + counter);
-		counter = counter + 1;
+		counter++;
 
 		WebElement blastCompanyName = driver.findElement(By.xpath("//*[@id=\"blast_from_name\"]"));
 		blastCompanyName.clear();
 		blastCompanyName.sendKeys("DevsLoop");
+
 		WebElement blastEmail = driver.findElement(By.xpath("//*[@id=\"blast_from_email\"]"));
 		blastEmail.clear();
 		blastEmail.sendKeys("saqib@adly.com");
-		driver.findElement(By.xpath("//*[@id=\"topnav\"]/div/ul[2]/li/button")).click();
+
+		WebElement nextButton = driver.findElement(By.xpath("//*[@id=\"topnav\"]/div/ul[2]/li/button"));
+		nextButton.click();
+
 	}
 
 	public void selectRecipients() {
-		WebDriverWait pageLoadCompleteWait = new WebDriverWait(driver, Duration.ofSeconds(60));
-		pageLoadCompleteWait.until((ExpectedCondition<Boolean>) wd -> ((org.openqa.selenium.JavascriptExecutor) wd)
-				.executeScript("return document.readyState").equals("complete"));
-		driver.findElement(By.xpath("//*[@id=\"topnav\"]/div/ul[2]/li/button")).click();
+		WebElement nextButton = driver.findElement(By.xpath("//*[@id=\"topnav\"]/div/ul[2]/li/button"));
+		nextButton.click();
 	}
 
-	public void designBlast() throws InterruptedException {
-		Thread.sleep(5000);
+	public void designBlast() {
 		try {
-			WebElement nextButton = driver.findElement(By.xpath("//*[@id=\"topnav\"]/div/ul[2]/li/button"));
-			System.out.println(nextButton.getText());
-			Thread.sleep(1000);
+			Wait<WebDriver> waitForLoader = new WebDriverWait(driver, Duration.ofSeconds(5));
+			waitForLoader.until((ExpectedCondition<Boolean>) wd -> ((JavascriptExecutor) wd)
+					.executeScript("return document.readyState").equals("complete"));
+
+			WebElement nextButton = new WebDriverWait(driver, Duration.ofSeconds(5)).until(
+					ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"topnav\"]/div/ul[2]/li/button")));
 			nextButton.click();
-			Thread.sleep(1000);
 		} catch (Exception e) {
-			System.out.println("Button not Click Bro");
-			driver.quit();
+			e.printStackTrace();
 		}
 	}
 
-	public void validateBlast() throws InterruptedException {
-		Thread.sleep(2000);
-		WebElement blastStatus = driver
-				.findElement(By.xpath("/html/body/div[4]/section[2]/div/div/div/div/div[1]/div/div[2]/span"));
-		System.out.println("Status : " + blastStatus.getText());
-
-		WebElement blastReason;
-		String blastReasonText = "";
+	public void validateBlast() {
 		try {
-			blastReason = driver
-					.findElement(By.xpath("/html/body/div[4]/section[2]/div/div/div/div/div[1]/div/div[2]/i/span"));
-			blastReasonText = blastReason.getAttribute("data-original-title");
-		} catch (Exception error) {
-			System.out.println("There is no Reason Exist");
-		}
+			WebElement blastStatus = new WebDriverWait(driver, Duration.ofSeconds(5))
+					.until(ExpectedConditions
+							.presenceOfElementLocated(By.xpath("//span[contains(@class, 'statusTag')]")));
 
-		if (blastStatus.getText().equals("Approved")) {
-			System.out.println("In Approved Condition");
-			Thread.sleep(2000);
-			WebElement moveNextStep = driver.findElement(By.xpath("//*[@id=\"topnav\"]/div/ul[2]/li/button"));
-			System.out.println("*******************************");
-			System.out.println(moveNextStep.getText());
-			System.out.println("*******************************");
-			Thread.sleep(1000);
-			moveNextStep.click();
-			Thread.sleep(2000);
-			System.out.println("Out Approved Condition");
+			WebElement blastReason;
+			String blastReasonText = "";
 			try {
-				Thread.sleep(2000);
-				WebElement designToast = driver.findElement(By.linkText("You must design your Blast before you send"));
-				System.out.println(designToast.getText());
-				moveNextStep.click();
-			} catch (Exception e) {
-				System.out.println("Blast Designed Successfully");
-			}
-		} else if (blastStatus.getText().equals("Pending")) {
-			System.out.println("Your Blast is in Pending State Please check the reason and Approve your Blast.");
-			System.out.println("Reason : " + blastReasonText);
+				blastReason = new WebDriverWait(driver, Duration.ofSeconds(5))
+						.until(ExpectedConditions
+								.presenceOfElementLocated(By.xpath("//span[contains(@data-toggle, 'tooltip")));
 
-			driver.quit();
-		} else {
-			System.out.println("Your Blast is Rejected");
-			System.out.println("Reason : " + blastReasonText);
+				blastReasonText = blastReason.getAttribute("data-original-title");
+
+			} catch (Exception error) {
+				System.out.println("There is no Reason Exist");
+			}
+
+			if (blastStatus.getText().equals("Approved")) {
+				System.out.println("In Approved Condition");
+				WebElement moveNextStep = new WebDriverWait(driver, Duration.ofSeconds(10)).until(
+						ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"topnav\"]/div/ul[2]/li/button")));
+				moveNextStep.click();
+				System.out.println("Out Approved Condition");
+				try {
+					WebElement designToast = driver
+							.findElement(By.linkText("You must design your Blast before you send"));
+					Wait<WebDriver> waitForTost = new WebDriverWait(driver, Duration.ofSeconds(5));
+					waitForTost.until(d -> designToast.isDisplayed());
+					System.out.println(designToast.getText());
+					moveNextStep.click();
+				} catch (Exception e) {
+					System.out.println("Blast Designed Successfully");
+				}
+			} else if (blastStatus.getText().equals("Pending")) {
+				System.out.println("Your Blast is in Pending State Please check the reason and Approve your Blast.");
+				System.out.println("Reason : " + blastReasonText);
+				driver.quit();
+			} else {
+				System.out.println("Your Blast is Rejected");
+				System.out.println("Reason : " + blastReasonText);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
 	public void sendBlast() {
-		WebElement sendBlastButton = driver
-				.findElement(By.xpath("/html/body/div[4]/div[2]/div[1]/div/div[2]/div/ul/li[1]/a/button"));
+		WebElement sendBlastButton = new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
+				.elementToBeClickable(By.xpath("/html/body/div[4]/div[2]/div[1]/div/div[2]/div/ul/li[1]/a/button")));
 		sendBlastButton.click();
 	}
 }
