@@ -32,7 +32,8 @@ public class BeamboxMain {
 
 		if (beamboxMenu == 7) {
 			System.out.println("**************** Cancellation Flow Menu ****************");
-			System.out.println("1. Pause Subscription, 2. DowngradePlan, 3. 30% Discount, 4. 50% Discount");
+			System.out.println(
+					"0. Extend Trial, 1. Pause Subscription, 2. DowngradePlan, 3. 30% Discount, 4. 50% Discount, 5. Cancel Account");
 			cancellatioFlowOption = beamBoxMenuInput.nextInt();
 		}
 

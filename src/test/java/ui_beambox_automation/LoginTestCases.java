@@ -23,7 +23,12 @@ public class LoginTestCases {
 		String email = "callum@beambox.com";
 		String password = "123456789";
 
-		driver.get("http://lvh.me:3000/login");
+		// String email = "testcf@gmail.com";
+		// String password = "Ab!0123456789";
+		String STAGING_BASE_URL = "https://staging.beambox.com/";
+		String LOCAL_BASE_URL = "http://lvh.me:3000/";
+
+		driver.get(LOCAL_BASE_URL + "login");
 		driver.manage().window().maximize();
 
 		fillFieldByXPath("//input[contains(@id, 'focus1')]", email);
