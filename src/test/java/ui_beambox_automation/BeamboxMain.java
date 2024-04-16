@@ -21,13 +21,14 @@ public class BeamboxMain {
 		CancellationFlow cancellationFlow;
 		int cancellatioFlowOption = 0;
 		Sitemap sitemap;
+		SmsLadingPage smslandingPage;
 
 		Scanner beamBoxMenuInput = new Scanner(System.in);
 
 		System.out.println("**************** BeamBox Menu ****************");
 		System.out.println("For Which Module you want to Run Automate Test Cases");
 		System.out.println("1. Login, 2. Singup, 3. Import Guests DataBase, 4. Add Guest, 5. Blast ");
-		System.out.println("6. Smart Markting Page, 7. Cancellatio Flow, 8. Sitemap ");
+		System.out.println("6. Smart Markting Page, 7. Cancellatio Flow, 8. Sitemap, 9. SMS Landing Page ");
 		int beamboxMenu = beamBoxMenuInput.nextInt();
 
 		if (beamboxMenu == 7) {
@@ -87,6 +88,11 @@ public class BeamboxMain {
 			else if (beamboxMenu == 8) {
 				sitemap = new Sitemap(driver);
 				sitemap.sitemap();
+			}
+
+			else if (beamboxMenu == 9) {
+				smslandingPage = new SmsLadingPage(driver);
+				smslandingPage.smsLandingPageMain();
 			}
 		} catch (WebDriverException e) {
 			System.out.println("Warning !");
