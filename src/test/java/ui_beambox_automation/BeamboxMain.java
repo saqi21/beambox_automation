@@ -37,6 +37,7 @@ public class BeamboxMain {
 			cancellatioFlowOption = beamBoxMenuInput.nextInt();
 		}
 
+		WebDriverManager.chromedriver().clearDriverCache().setup();
 		WebDriverManager.chromedriver().setup();
 		driver = new ChromeDriver();
 
